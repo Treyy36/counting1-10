@@ -1,0 +1,65 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    background-color: cadetblue;
+    color: white;
+}
+.header, footer {
+    background-color: green;
+    text-align: center;
+    width: 100%;
+    padding: 10px 0;
+}
+a{
+    color:#cccccc;
+    text-decoration: none;
+}
+
+#gameCanvas {
+    /* display: block; Remove any extra space below the canvas */
+    position: relative;
+    width: 960px; /* Maximum width of the canvas */
+    height: 640px; /* Maximum height of the canvas */
+    margin: auto; /* Center the canvas if it's smaller than the screen */
+    text-align: center;
+    background-color: black;
+    color: white;
+}
+
+.selectScene-container {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    margin: 50px;
+    background-color: grey;
+    border: 5px solid red;
+    justify-content: center;
+}
+
+#gameScene-container {
+    position: relative;
+    width: 850px; 
+    height: 500px; 
+    background-color: black;
+    border: 2px solid red;
+    margin: 20px auto;
+    justify-content: center;
+}
+
+img {
+    width: 100px;
+    height: 100px;
+}
+.selectScene-container img{
+    background-color: whitesmoke;
+    border: 5px solid black;
+    margin: 30px;   
+}
+
+#gameScene-container img {
+    position: absolute;
+    /* transition: all 0.3s; */
+}
+
+
+
+
