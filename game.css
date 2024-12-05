@@ -29,10 +29,6 @@ h1 {
     justify-content: center;
 }
 
-img {
-    width: 100px;
-    height: 100px;
-}
 .selectScene-container img{
     background-color: whitesmoke;
     border: 5px solid black;
