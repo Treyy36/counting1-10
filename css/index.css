@@ -4,12 +4,7 @@ body, html {
     background-color: cadetblue;
     color: white;
 }
-.header, footer {
-    background-color: green;
-    text-align: center;
-    width: 100%;
-    padding: 10px 0;
-}
+
 a{
     color:#cccccc;
     text-decoration: none;
@@ -29,10 +24,10 @@ h1 {
     color: white;
 }
 
-#gameCanvas img{
+#selectScene img{
     background-color: whitesmoke;
-    width: 75px;
-    height: 75px;
+    width: 150px;
+    height: 100px;
     border: 5px solid black;
     margin: 30px;   
 }

@@ -1,11 +1,10 @@
 //src = image-tile.js
 
 import { AUDIO } from '../game-constants.js';
-import { correctPositions } from '../game.js';
+import { correctPositions, orderCnt, resetOrderCnt, incrementOrderCnt } from '../game.js';
 import { triggerWinAnimation } from '../game.js';
 
 const animationSpeed = 0.05;
-let orderCnt = 0;
 
 export class ImageTile {
     constructor({ position, velocity, value, context, rows, cols, srcImage, srcImageWidth, srcImageHeight }) {
@@ -101,16 +100,16 @@ export class ImageTile {
             AUDIO.correct.currentTime = 0;
             AUDIO.correct.play();
             this.isRevealed = true;
-            orderCnt++;
+            incrementOrderCnt();
             if (value === this.numTiles) {
-                orderCnt = 0;
+                resetOrderCnt();
                 setTimeout(() => {
                     triggerWinAnimation();
                 }, 2500);
                 setTimeout(() => {
-                    AUDIO.win.currentTime = 0;
-                    AUDIO.win.play();
-                }, 1200);
+                AUDIO.levelComplete.currentTime = 0;
+                AUDIO.levelComplete.play();
+                }, 2000);
             }
         } else {
             console.log(`Image with value ${this.value} clicked! - Incorrect.`)

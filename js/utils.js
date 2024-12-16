@@ -1,5 +1,15 @@
 // src = utils.js
 
+// // Calculate available space after margins
+// const maxElementWidth = availableWidth / Math.ceil(Math.sqrt(numElements)); // Use the square root to fit in rows and columns
+// const maxElementHeight = availableHeight / Math.ceil(Math.sqrt(numElements));
+// const availableWidth = areaWidth - 2 * margin;
+// const availableHeight = areaHeight - 2 * margin;
+const correctMaxElementHeight = 320; 
+const correctMaxElementWidth = 192;
+
+const randMaxElementHeight = 250; 
+const randMaxElementWidth = 150;
 function areRectanglesOverlapping(x1, y1, x2, y2, width, height) {
     return (
         x1 < x2 + width &&
@@ -18,6 +28,11 @@ export function containsPoint(mouseX, mouseY, containerX, containerY, containerW
 }
 
 export function generateRandomPositions(numElements, elementWidth, elementHeight, areaWidth, areaHeight, margin) {
+    // Check if element size exceeds the maximum allowed dimensions
+    if (elementWidth > randMaxElementWidth || elementHeight > randMaxElementHeight) {
+        console.log(`Rand. Element width and height are: ${elementWidth}, ${elementHeight}`)
+        return { error: "Element size is too large to fit within the area" };
+    }
     const positions = [];
     while (positions.length < numElements) {
         const x = Math.floor(Math.random() * (areaWidth - elementWidth - 2 * margin) + margin);
@@ -26,15 +41,24 @@ export function generateRandomPositions(numElements, elementWidth, elementHeight
             positions.push({ x, y });
         }
     }
+    if (positions.length !== numElements) {
+        console.error("Error: The positions array must contain exactly 10 elements.");
+        return { error: "Positions array must contain exactly 10 elements." };
+    }
     return positions;
 }
 
 export function generateCorrectPositions(numRows, numCols, elementWidth, elementHeight, areaWidth, areaHeight) {
+    
+    if (elementWidth > correctMaxElementHeight || elementHeight > correctMaxElementHeight) {
+        console.log(`Corr. Element width and height are: ${elementWidth}, ${elementHeight}`)
+        return { error: "Element size is too large to fit within the area" };
+    }
     const totalGridWidth = numCols * elementWidth;
     const totalGridHeight = numRows * elementHeight;
 
     const startX = (areaWidth - totalGridWidth) / 2; // Center horizontally
-    const startY = (areaHeight - totalGridHeight) / 2; // Center vertically
+    const startY = (30); //30px margin from top
 
     const positions = [];
     for (let row = 0; row < numRows; row++) {

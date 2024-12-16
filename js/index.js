@@ -1,7 +1,7 @@
 // src index.js
 
-function startGame(imageSrc, rows, cols) {
-    const queryString = `?imageSrc=${encodeURIComponent(imageSrc)}&rows=${rows}&cols=${cols}`;
+function startGame(imageSrc, imageSrcWidth, imageSrcHeight) {
+    const queryString = `?imageSrc=${encodeURIComponent(imageSrc)}&imageSrcWidth=${imageSrcWidth}&imageSrcHeight=${imageSrcHeight}`;
     window.location.href = `game.html${queryString}`;
 }
 

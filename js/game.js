@@ -5,6 +5,17 @@ import { ImageTile } from './components/image-tile.js';
 
 // -------------------- EXPORTS --------------------
 export let correctPositions;
+
+export let orderCnt = 0;
+
+export function resetOrderCnt() {
+    orderCnt = 0;
+}
+
+export function incrementOrderCnt() {
+    orderCnt++;
+}
+
 export function triggerWinAnimation() {
     let delay = 0;
     const jumpDuration = 1000;
@@ -18,7 +29,7 @@ export function triggerWinAnimation() {
                         imageTiles.forEach(tile => {
                             tile.fontColor = 'rgba(0, 0, 0, 0)';
                         });
-                    }, 1500);
+                    }, 1000);
                 }
             });
         }, delay);
@@ -35,8 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // imported params
     const params = new URLSearchParams(window.location.search);
     const imageSrc = decodeURIComponent(params.get('imageSrc'));
-    const rows = parseInt(params.get('rows'), 10);
-    const cols = parseInt(params.get('cols'), 10);
+    const puzzleImageWidth = parseInt(params.get('imageSrcWidth'), 10);
+    const puzzleImageHeight = parseInt(params.get('imageSrcHeight'), 10);
 
     // constants
     const canvas = document.querySelector('canvas');
@@ -44,32 +55,23 @@ document.addEventListener('DOMContentLoaded', () => {
     canvas.width = 960;
     canvas.height = 640;
 
-    const fullImageSrc = imageSrc;
-    const fullImageWidth = 800;
-    const fullImageHeight = 300;
+    const rows = 2;
+    const cols = 5;
+    const tileWidth = puzzleImageWidth / cols;    
+    const tileHeight = puzzleImageHeight / rows;  
 
-    const tileWidth = fullImageWidth / cols;
-    const tileHeight = fullImageHeight / rows;
+    const backgroundImage = null;
+    // const backgroundImage = new Image();
+    // backgroundImage.src = 'img/blue-gradient-background.jpg';
 
-    const backgroundImage = new Image();
-    backgroundImage.src = 'img/blue-gradient-background.jpg';
-
-    // Initialize correct positions
+    // // Initialize positions
     correctPositions = Utils.generateCorrectPositions(rows, cols, tileWidth, tileHeight, canvas.width, canvas.height);
-
-    const randomPositions = Utils.generateRandomPositions(
-        rows * cols,
-        tileWidth,
-        tileHeight,
-        canvas.width,
-        canvas.height,
-        10
-    );
-
-    const fullImage = new Image();
-    fullImage.src = fullImageSrc;
+    const randomPositions = Utils.generateRandomPositions(rows * cols, tileWidth/2, tileHeight/2, canvas.width, canvas.height, 10);
 
     function initializeImageTiles(positions) {
+        if (!Array.isArray(positions) || positions.length !== 10) {
+            return { error: "Positions array must contain exactly 10 elements." };
+        }
         for (let i = 0; i < positions.length; i++) {
             imageTiles.push(new ImageTile({
                 position: { x: positions[i].x, y: positions[i].y },
@@ -78,16 +80,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 context: ctx,
                 rows: rows,
                 cols: cols,
-                srcImage: fullImage,
-                srcImageWidth: 800,
-                srcImageHeight: 300
+                srcImage: puzzleImage,
+                srcImageWidth: puzzleImageWidth,
+                srcImageHeight: puzzleImageHeight
             }));
         }
     }
 
     function resetPuzzle() {
-        imageTiles.length = 0;
-        initializeImageTiles(randomPositions);
+        location.reload();
+        // resetOrderCnt();
+        // imageTiles.length = 0;
+        // initializeImageTiles(randomPositions);
     }
 
     function setupButtons() {
@@ -124,7 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
             buttons.finishButton.handleClick(mouseX, mouseY);
 
             imageTiles.forEach(tile => {
-                console.log("Clicked")
                 if (!tile.isRevealed && Utils.containsPoint(mouseX, mouseY, tile.position.x, tile.position.y, tile.width, tile.height)) {
                     tile.checkOrder(tile.value);
                 }
@@ -135,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function animate(buttons) {
         requestAnimationFrame(() => animate(buttons));
         // Draw the background image first
-        if (backgroundImage.complete) {
+        if (backgroundImage && backgroundImage.complete) {
             ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
         } else {
             // Optional fallback if the image is not loaded yet
@@ -149,8 +152,11 @@ document.addEventListener('DOMContentLoaded', () => {
         imageTiles.forEach(tile => tile.update());
     }
 
+    const puzzleImage = new Image();
+    puzzleImage.src = imageSrc;
+
     function startPuzzle() {
-        fullImage.onload = () => {
+        puzzleImage.onload = () => {
             initializeImageTiles(randomPositions);
             const buttons = setupButtons();
             setupEventListeners(buttons);

@@ -19,26 +19,6 @@ body, html {
 h1 {
     text-align: center;
 }
-#gameScene-container {
-    position: relative;
-    width: 850px; 
-    height: 500px; 
-    background-color: black;
-    border: 2px solid red;
-    margin: 20px auto;
-    justify-content: center;
-}
-
-.selectScene-container img{
-    background-color: whitesmoke;
-    border: 5px solid black;
-    margin: 30px;   
-}
-
-#gameScene-container img {
-    position: absolute;
-    /* transition: all 0.3s; */
-}
 
 
 
