@@ -13,15 +13,19 @@ export class Button {
 
     draw() {
         // Draw button background
-        this.context.fillStyle = 'grey'; // Button color
-       this.context.fillRect(this.x, this.y, this.width, this.height);
+        this.context.fillStyle = 'orange'; // Button color
+        this.context.fillRect(this.x, this.y, this.width, this.height);
 
+        // Draw border
+        this.context.lineWidth = 2;
+        this.context.strokeStyle = "black";
+        this.context.strokeRect(this.x, this.y, this.width, this.height)
         // Draw button text
-       this.context.fillStyle = 'white'; // Text color
-       this.context.font = `${this.height * 0.7}px Tahoma`; // Font size relative to height
-       this.context.textAlign = 'center';
-       this.context.textBaseline = 'middle';
-       this.context.fillText(this.text, this.x + this.width / 2, this.y + this.height / 2);
+        this.context.fillStyle = 'white'; // Text color
+        this.context.font = `${this.height * 0.7}px Tahoma`; // Font size relative to height
+        this.context.textAlign = 'center';
+        this.context.textBaseline = 'middle';
+        this.context.fillText(this.text, this.x + this.width / 2, this.y + this.height / 2);
     }
 
     containsPoint(mouseX, mouseY) {

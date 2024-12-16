@@ -1,3 +1,4 @@
+<!-- src index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,16 +14,21 @@
     <div id="gameCanvas">
         <div id="selectScene">
             <div class="selectScene-container">
-                <img id ="image1" src="img/Count_10_Game_Full_Puzzle_Image_1_resized.jpg" onclick="startGame1()"> 
-                <img id ="image1" src="img/Count_10_Game_Full_Puzzle_Image_1_resized.jpg" onclick="startGame1()">
-                <img id ="image1" src="img/Count_10_Game_Full_Puzzle_Image_1_resized.jpg" onclick="startGame1()"> 
-                <img id ="image1" src="img/Count_10_Game_Full_Puzzle_Image_1_resized.jpg" onclick="startGame1()"> 
-                <img id ="image1" src="img/Count_10_Game_Full_Puzzle_Image_1_resized.jpg" onclick="startGame1()">  
+                1-4
+                <img src="img/Count_10_Game_Full_Puzzle_Image_1_resized.jpg" onclick="startGame('img/Count_10_Game_Full_Puzzle_Image_1_resized.jpg', 1, 4)">
+                1-6  
+                <img src="img/Count_10_Game_Full_Puzzle_Image_1_resized.jpg" onclick="startGame('img/Count_10_Game_Full_Puzzle_Image_1_resized.jpg', 2, 3)"> 
+                1-8
+                <img src="img/Count_10_Game_Full_Puzzle_Image_1_resized.jpg" onclick="startGame('img/Count_10_Game_Full_Puzzle_Image_1_resized.jpg', 2, 4)"> 
+                1-10
+                <img src="img/Count_10_Game_Full_Puzzle_Image_1_resized.jpg" onclick="startGame('img/Count_10_Game_Full_Puzzle_Image_1_resized.jpg', 2, 5)"> 
+                1-12
+                <img src="img/Count_10_Game_Full_Puzzle_Image_1_resized.jpg" onclick="startGame('img/Count_10_Game_Full_Puzzle_Image_1_resized.jpg', 3, 4)">
             </div>
         </div>
     </div>
 
-    <script src="index.js"></script>
+    <script type="module" src="js/index.js"></script>
 
 </body>
 </html>

@@ -4,52 +4,48 @@ import { AUDIO } from '../game-constants.js';
 import { correctPositions } from '../game.js';
 import { triggerWinAnimation } from '../game.js';
 
-const fullImageWidth = 800;
-const fullImageHeight = 300;
-
-const rows = 2; // Number of rows in the puzzle grid
-const cols = 5;  // Number of columns in the puzzle grid
-const numTiles = rows * cols;
 const animationSpeed = 0.05;
-
 let orderCnt = 0;
-const order =[]
-for (let i = 0; i < numTiles; i++) {
-    order[i] = i+1;
-}
-
-const smallTileWidth = fullImageWidth / cols / 2;    //80
-const smallTileHeight = fullImageHeight / rows / 2;  //75
-const tileWidth = fullImageWidth / cols;    //160
-const tileHeight = fullImageHeight / rows;  //150
-
 
 export class ImageTile {
-    constructor({ position, velocity, value, context, srcImage }) {
+    constructor({ position, velocity, value, context, rows, cols, srcImage, srcImageWidth, srcImageHeight }) {
         this.position = position;
         this.velocity = velocity;
         this.value = value;
         this.context = context;
+        this.rows = rows;
+        this.cols = cols;
         this.srcImage = srcImage;
+
+        this.numTiles = rows * cols;
+        this.tileHeight = srcImageHeight / rows;
+        this.tileWidth = srcImageWidth / cols;
         
-        this.width = smallTileWidth;
-        this.height = smallTileHeight;
+        this.width = this.tileHeight / 2;
+        this.height = this.tileWidth / 2;
         this.isRevealed = false;
         this.resetTile = false;
         this.fontColor = 'white';
         this.animationJump = 0;
+        this.order = this.createOrderArray(this.numTiles);
+    }
 
-        // this.onClick();
+    createOrderArray(numTiles) {
+        const order = []
+        for (let i = 0; i < numTiles; i++) {
+            order[i] = i+1;
+        }
+        return order;
     }
 
     draw() {
-        const sx = (this.value-1) % cols * tileWidth //Source X in full image
-        const sy = Math.floor((this.value - 1) / cols) * tileHeight;
+        const sx = (this.value-1) % this.cols * this.tileWidth //Source X in full image
+        const sy = Math.floor((this.value - 1) / this.cols) * this.tileHeight;
 
         // console.log(`Tile ${this.value} | sx: ${sx}, sy: ${sy} | posX: ${this.position.x}, posY: ${this.position.y}`);
 
         this.context.drawImage(
-            this.srcImage, sx, sy, tileWidth, tileHeight, // Source image, to be cut out based on positions and dimensions
+            this.srcImage, sx, sy, this.tileWidth, this.tileHeight, // Source image, to be cut out based on positions and dimensions
             this.position.x, this.position.y, this.width, this.height // New Destination positions and dimension based on above source
         );
 
@@ -88,7 +84,7 @@ export class ImageTile {
             this.draw()
             const targetPosition = correctPositions[this.value - 1];
             this.moveToTarget(targetPosition.x, targetPosition.y, animationSpeed);
-            this.resizeToTarget(tileWidth, tileHeight, animationSpeed);
+            this.resizeToTarget(this.tileWidth, this.tileHeight, animationSpeed);
         }
 
         if (this.resetTile) {
@@ -99,20 +95,22 @@ export class ImageTile {
     }
 
     checkOrder(value) {
-        console.log(`Tile value: ${this.value} and the current order is: ${order[orderCnt]}`)
-        if (value === order[orderCnt]) {
+        console.log(`Tile value: ${this.value} and the current order is: ${this.order[orderCnt]}`)
+        if (value === this.order[orderCnt]) {
             console.log(`Image with value ${this.value} clicked! - Correct!`)
             AUDIO.correct.currentTime = 0;
             AUDIO.correct.play();
             this.isRevealed = true;
             orderCnt++;
-            if (value === numTiles) {
+            if (value === this.numTiles) {
                 orderCnt = 0;
+                setTimeout(() => {
+                    triggerWinAnimation();
+                }, 2500);
                 setTimeout(() => {
                     AUDIO.win.currentTime = 0;
                     AUDIO.win.play();
-                    triggerWinAnimation();
-                }, 3000);
+                }, 1200);
             }
         } else {
             console.log(`Image with value ${this.value} clicked! - Incorrect.`)
