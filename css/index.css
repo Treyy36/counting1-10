@@ -14,6 +14,9 @@ a{
     color:#cccccc;
     text-decoration: none;
 }
+h1 {
+    text-align: center;
+}
 
 #gameCanvas {
     /* display: block; Remove any extra space below the canvas */
@@ -26,34 +29,12 @@ a{
     color: white;
 }
 
-.selectScene-container {
-    display: grid;
-    grid-template-columns: auto auto auto;
-    margin: 50px;
-    background-color: grey;
-    border: 5px solid red;
-    justify-content: center;
-}
-
-#gameScene-container {
-    position: relative;
-    width: 850px; 
-    height: 500px; 
-    background-color: black;
-    border: 2px solid red;
-    margin: 20px auto;
-    justify-content: center;
-}
-
-.selectScene-container img{
+#gameCanvas img{
     background-color: whitesmoke;
+    width: 75px;
+    height: 75px;
     border: 5px solid black;
     margin: 30px;   
-}
-
-#gameScene-container img {
-    position: absolute;
-    /* transition: all 0.3s; */
 }
 
 
