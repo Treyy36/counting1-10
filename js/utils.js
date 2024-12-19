@@ -58,7 +58,7 @@ export function generateCorrectPositions(numRows, numCols, elementWidth, element
     const totalGridHeight = numRows * elementHeight;
 
     const startX = (areaWidth - totalGridWidth) / 2; // Center horizontally
-    const startY = (30); //30px margin from top
+    const startY = (15); //15px margin from top
 
     const positions = [];
     for (let row = 0; row < numRows; row++) {

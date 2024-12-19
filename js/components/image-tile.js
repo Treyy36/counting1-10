@@ -25,6 +25,8 @@ export class ImageTile {
         this.isRevealed = false;
         this.resetTile = false;
         this.fontColor = 'white';
+        this.borderColor = 'black';
+        this.drawFinalBorder = false;
         this.animationJump = 0;
         this.order = this.createOrderArray(this.numTiles);
     }
@@ -44,15 +46,26 @@ export class ImageTile {
         // console.log(`Tile ${this.value} | sx: ${sx}, sy: ${sy} | posX: ${this.position.x}, posY: ${this.position.y}`);
 
         this.context.drawImage(
-            this.srcImage, sx, sy, this.tileWidth, this.tileHeight, // Source image, to be cut out based on positions and dimensions
-            this.position.x, this.position.y, this.width, this.height // New Destination positions and dimension based on above source
+            this.srcImage, sx, sy, this.tileWidth, this.tileHeight,   // Cropped positions and dimensions from src
+            this.position.x, this.position.y, this.width, this.height // Displayed positions and dimension from cropp  on canvas
         );
 
         if (!this.isRevealed) {
             this.context.fillStyle = 'rgba(0, 170, 190, 0.8)';
             this.context.fillRect(this.position.x, this.position.y, this.width, this.height);
+            // Draw border
+            this.context.lineWidth = 2;
+            this.context.strokeStyle = "black";
+            this.context.strokeRect(this.position.x, this.position.y, this.width, this.height)
         }
 
+        if (this.drawFinalBorder) {
+            this.context.lineWidth = 4;
+            this.context.strokeStyle = "black";
+            this.context.strokeRect(15, 15, 930, 530)
+        }
+
+        // Draw Text
         const fontSize = Math.min(this.width, this.height) * 0.6; // 40% of the smaller tile dimension
         this.context.fillStyle = this.fontColor; // Text color
         this.context.font = `bold ${fontSize}px Tahoma`; // Set dynamic font size
@@ -63,6 +76,14 @@ export class ImageTile {
             this.position.x + this.width / 2, // X: center of the tile
             this.position.y + this.height / 2 - this.animationJump +3 // Y: center of the tile
         );
+        // Draw Text Outline
+        this.context.lineWidth = 2;
+        this.context.strokeStyle = this.borderColor;
+        this.context.strokeText(
+            this.value, 
+            this.position.x + this.width / 2, 
+            this.position.y + this.height / 2 - this.animationJump +3 // Y: center of the tile
+        )
     }
 
     moveToTarget(targetX, targetY, speed) {

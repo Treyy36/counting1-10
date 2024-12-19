@@ -2,7 +2,8 @@
 import * as Utils from './utils.js';
 import { Button } from './components/button.js';
 import { ImageTile } from './components/image-tile.js';
-
+import { AUDIO } from './game-constants.js';
+// import { incrementCurrentLevel } from './index.js';
 // -------------------- EXPORTS --------------------
 export let correctPositions;
 
@@ -16,7 +17,17 @@ export function incrementOrderCnt() {
     orderCnt++;
 }
 
+export  let puzzleWin = false;
 export function triggerWinAnimation() {
+    //play voice audio
+    setTimeout(() => {
+        AUDIO.noDolphinHere.currentTime = 0;
+        AUDIO.noDolphinHere.play();
+    }, 2500);
+    // enable continue button
+    puzzleWin = true;
+
+    // Trigger Win Animation
     let delay = 0;
     const jumpDuration = 1000;
     const jumpHeight = 40;
@@ -26,8 +37,11 @@ export function triggerWinAnimation() {
             Utils.animateTileJump(tile, jumpDuration, jumpHeight, () => {
                 if (index === imageTiles.length - 1) {
                     setTimeout(() => {
+                        // Make all of the tiles numbers transparents so you can see full image
                         imageTiles.forEach(tile => {
                             tile.fontColor = 'rgba(0, 0, 0, 0)';
+                            tile.borderColor = 'rgba(0, 0, 0, 0)';
+                            tile.drawFinalBorder = true;
                         });
                     }, 1000);
                 }
@@ -40,14 +54,16 @@ export function triggerWinAnimation() {
 
 // -------------------- STATE VARIABLES --------------------
 const imageTiles = [];
-
 // -------------------- MAIN LOGIC --------------------
 document.addEventListener('DOMContentLoaded', () => {
+    AUDIO.puzzleInstructions.currentTime = 0;
+    AUDIO.puzzleInstructions.play();
     // imported params
     const params = new URLSearchParams(window.location.search);
     const imageSrc = decodeURIComponent(params.get('imageSrc'));
     const puzzleImageWidth = parseInt(params.get('imageSrcWidth'), 10);
     const puzzleImageHeight = parseInt(params.get('imageSrcHeight'), 10);
+    let currentLevel = parseInt(params.get('currentLevel'), 10);
 
     // constants
     const canvas = document.querySelector('canvas');
@@ -62,11 +78,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const backgroundImage = null;
     // const backgroundImage = new Image();
-    // backgroundImage.src = 'img/blue-gradient-background.jpg';
+    // backgroundImage.src = 'img/sea-background.jpg';
 
     // // Initialize positions
     correctPositions = Utils.generateCorrectPositions(rows, cols, tileWidth, tileHeight, canvas.width, canvas.height);
-    const randomPositions = Utils.generateRandomPositions(rows * cols, tileWidth/2, tileHeight/2, canvas.width, canvas.height, 10);
+    const randomPositions = Utils.generateRandomPositions(rows * cols, tileWidth/2, tileHeight/2, canvas.width, canvas.height, 25);
 
     function initializeImageTiles(positions) {
         if (!Array.isArray(positions) || positions.length !== 10) {
@@ -89,33 +105,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function resetPuzzle() {
         location.reload();
-        // resetOrderCnt();
-        // imageTiles.length = 0;
-        // initializeImageTiles(randomPositions);
     }
 
     function setupButtons() {
+        const exitButton = new Button({
+            x: 50,
+            y: canvas.height - 65,
+            width: 150,
+            height: 50,
+            text: 'Exit',
+            isenabled: true,
+            onClick: () => {
+                window.location.href = 'index.html'; 
+            },
+            context: ctx,
+        });
+        const finishButton = new Button({
+            x: canvas.width - 200,
+            y: canvas.height - 65,
+            width: 150,
+            height: 50,
+            text: 'Continue',
+            isenabled: false,
+            onClick: () => {
+                console.log(currentLevel)
+                currentLevel++;
+                const levelInfo = `?currentLevel=${encodeURIComponent(currentLevel)}`;
+                window.location.href = `index.html${levelInfo}`;
+            },
+            context: ctx,
+        });
         const restartButton = new Button({
-            x: canvas.width / 4 - 50,
-            y: canvas.height - 60,
-            width: 120,
-            height: 40,
+            x: canvas.width/2 - 75,
+            y: canvas.height - 65,
+            width: 150,
+            height: 50,
             text: 'Restart',
+            isenabled: true,
             onClick: () => resetPuzzle(),
             context: ctx,
         });
-
-        const finishButton = new Button({
-            x: (3 * canvas.width) / 4 - 50,
-            y: canvas.height - 60,
-            width: 120,
-            height: 40,
-            text: 'Continue',
-            onClick: () => (window.location.href = 'index.html'),
-            context: ctx,
-        });
-
-        return { restartButton, finishButton };
+        return { restartButton, finishButton, exitButton };
     }
 
     function setupEventListeners(buttons) {
@@ -124,6 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const mouseX = event.clientX - rect.left;
             const mouseY = event.clientY - rect.top;
 
+            buttons.exitButton.handleClick(mouseX, mouseY);
             buttons.restartButton.handleClick(mouseX, mouseY);
             buttons.finishButton.handleClick(mouseX, mouseY);
 
@@ -142,10 +173,11 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
         } else {
             // Optional fallback if the image is not loaded yet
-            ctx.fillStyle = 'black';
+            ctx.fillStyle = '#bdd0c0';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
 
+        buttons.exitButton.draw();
         buttons.restartButton.draw();
         buttons.finishButton.draw();
 
