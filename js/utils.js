@@ -20,14 +20,14 @@ function areRectanglesOverlapping(x1, y1, x2, y2, width, height) {
 }
 
 // Checks if the mouse has clicked in the container
-export function containsPoint(mouseX, mouseY, containerX, containerY, containerWidth, containerHeight ) {
+ function containsPoint(mouseX, mouseY, containerX, containerY, containerWidth, containerHeight ) {
     return (
         mouseX >= containerX && mouseX <= containerX + containerWidth &&
         mouseY >= containerY &&mouseY <= containerY + containerHeight
     );
 }
 
-export function generateRandomPositions(numElements, elementWidth, elementHeight, areaWidth, areaHeight, margin) {
+ function generateRandomPositions(numElements, elementWidth, elementHeight, areaWidth, areaHeight, margin) {
     // Check if element size exceeds the maximum allowed dimensions
     if (elementWidth > randMaxElementWidth || elementHeight > randMaxElementHeight) {
         console.log(`Rand. Element width and height are: ${elementWidth}, ${elementHeight}`)
@@ -48,7 +48,7 @@ export function generateRandomPositions(numElements, elementWidth, elementHeight
     return positions;
 }
 
-export function generateCorrectPositions(numRows, numCols, elementWidth, elementHeight, areaWidth, areaHeight) {
+ function generateCorrectPositions(numRows, numCols, elementWidth, elementHeight, areaWidth, areaHeight) {
     
     if (elementWidth > correctMaxElementHeight || elementHeight > correctMaxElementHeight) {
         console.log(`Corr. Element width and height are: ${elementWidth}, ${elementHeight}`)
@@ -71,7 +71,7 @@ export function generateCorrectPositions(numRows, numCols, elementWidth, element
     return positions;
 }
 
-export function animateTileJump(tile, duration, jumpHeight, onComplete) {
+ function animateTileJump(tile, duration, jumpHeight, onComplete) {
     let startTime = null;
 
     function animate(time) {

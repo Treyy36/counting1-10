@@ -61,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // imported params
     const params = new URLSearchParams(window.location.search);
     const imageSrc = decodeURIComponent(params.get('imageSrc'));
+    console.log
     const puzzleImageWidth = parseInt(params.get('imageSrcWidth'), 10);
     const puzzleImageHeight = parseInt(params.get('imageSrcHeight'), 10);
     let currentLevel = parseInt(params.get('currentLevel'), 10);

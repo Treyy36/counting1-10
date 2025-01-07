@@ -4,17 +4,15 @@ import { AUDIO } from '../game-constants.js';
 import { correctPositions, orderCnt, resetOrderCnt, incrementOrderCnt } from '../game.js';
 import { triggerWinAnimation } from '../game.js';
 
-const animationSpeed = 0.05;
-
 export class ImageTile {
-    constructor({ position, velocity, value, context, rows, cols, srcImage, srcImageWidth, srcImageHeight }) {
+    constructor({ position, value, context, rows, cols, srcImage, srcImageWidth, srcImageHeight, animationSpeed }) {
         this.position = position;
-        this.velocity = velocity;
         this.value = value;
         this.context = context;
         this.rows = rows;
         this.cols = cols;
         this.srcImage = srcImage;
+        this.animationSpeed = 0.05;
 
         this.numTiles = rows * cols;
         this.tileHeight = srcImageHeight / rows;
