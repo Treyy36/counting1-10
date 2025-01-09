@@ -106,7 +106,7 @@ class ImageTile {
             this.moveToTarget(targetPosition.x, targetPosition.y, this.animationSpeed);
         }
     }
-    
+
     checkOrder(value) {
         console.log(`Tile value: ${this.value} and the current order is: ${this.order[orderCnt]}`)
         if (value === this.order[orderCnt]) {
@@ -210,17 +210,22 @@ class PuzzleLocation {
 
         this.context.lineWidth = this.state === 'current' ? 6 : 2; // Thicker border for current state
         this.context.stroke();
-
+        // Draw Text Decoration
+        this.context.fillStyle = '#e0d791';
+        this.context.font = `bold 30px Tahoma`;
+        this.context.textAlign = 'center';
+        this.context.textBaseline = 'top';
+        this.context.fillText(this.text, this.x + this.width / 2 + 3, this.y + this.height + 5);
         // Draw text for completed levels
-        this.context.fillStyle = 'white';
-        this.context.font = `bold 25px Tahoma`;
+        this.context.fillStyle = '#c98d5b';
+        this.context.font = `bold 30px Tahoma`;
         this.context.textAlign = 'center';
         this.context.textBaseline = 'top';
         this.context.fillText(this.text, this.x + this.width / 2, this.y + this.height + 5);
-        // Draw Text border
-        this.context.lineWidth = 1;
-        this.context.strokeStyle = "black";
-        this.context.strokeText(this.text, this.x + this.width / 2, this.y + this.height + 5)
+        // // Draw Text border
+        // this.context.lineWidth = .1;
+        // this.context.strokeStyle = "e0d791";
+        // this.context.strokeText(this.text, this.x + this.width / 2, this.y + this.height + 5)
     }
 
     containsPoint(mouseX, mouseY) {

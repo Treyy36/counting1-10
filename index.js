@@ -43,7 +43,7 @@ for (let i = 0; i < 10; i++) {
     order[i] = i+1;
 }
 const backgroundImage = new Image();
-backgroundImage.src = 'img/sea-background.jpg';
+backgroundImage.src = 'img/sea-background.png';
 const kelpForestImage = new Image();
 kelpForestImage.src = 'img/1-kelp-forest.png';
 const shipwreckImage = new Image();
@@ -60,11 +60,11 @@ const puzzleLocations = setupPuzzleLocations();
 
 function setupPuzzleLocations() {
     const locationsConfig = [
-        { x: canvas.width - 725, y: canvas.height - 615, text: 'Kelp Forest', level: 1, image: kelpForestImage },
-        { x: canvas.width - 428, y: canvas.height - 570, text: 'Shipwreck', level: 2, image: shipwreckImage },
-        { x: canvas.width - 780, y: canvas.height - 400, text: 'Jellyfish Flats', level: 3, image: jellyfishImage },
-        { x: canvas.width - 345, y: canvas.height - 385, text: 'Coral Reef', level: 4, image: coralReefImage },
-        { x: canvas.width - 600, y: canvas.height - 200, text: 'Dolphin Lagoon', level: 5, image: dolphinLagoonImage },
+        { x: canvas.width - 605, y: canvas.height - 505, text: 'Kelp Forest', level: 1, image: kelpForestImage },
+        { x: canvas.width - 375, y: canvas.height - 185, text: 'Shipwreck', level: 2, image: shipwreckImage },
+        { x: canvas.width - 700, y: canvas.height - 230, text: 'Jellyfish Flats', level: 3, image: jellyfishImage },
+        { x: canvas.width - 825, y: canvas.height - 385, text: 'Coral Reef', level: 4, image: coralReefImage },
+        { x: canvas.width - 473, y: canvas.height - 367, text: 'Dolphin Lagoon', level: 5, image: dolphinLagoonImage },
     ];
 
     const locations = locationsConfig.map(config => {
@@ -79,6 +79,7 @@ function setupPuzzleLocations() {
         });
         // Event listener to handle click for this location
         canvas.addEventListener('click', (event) => {
+            if (!selectingLevel) return; // Ignore clicks if not in level selection mode
             const rect = canvas.getBoundingClientRect();
             const mouseX = event.clientX - rect.left;
             const mouseY = event.clientY - rect.top;
@@ -93,6 +94,7 @@ function setupPuzzleLocations() {
 function removeCurrentPuzzle() {
     orderCnt = 0;
     imageTiles.length = 0;
+    buttons.at(1).enabled = false; // reset continue button
 }
 function setupButtons() {
     const buttonsConfig = [
@@ -183,14 +185,14 @@ function startPuzzle(level) {
 }
 
 function startingAudio() {
-    currentLevel = 1;
-    // AUDIO.welcome.play();
-    // AUDIO.welcome.addEventListener('ended', () => {
-    //     setTimeout(() => {
-    //         currentLevel=1;
-    //         AUDIO.kelpForest.play();
-    //     }, 2000); 
-    // });
+    // currentLevel = 1;
+    AUDIO.welcome.play();
+    AUDIO.welcome.addEventListener('ended', () => {
+        setTimeout(() => {
+            currentLevel=1;
+            AUDIO.kelpForest.play();
+        }, 2000); 
+    });
 }
 
 function setupPuzzleTileEventListeners() {
