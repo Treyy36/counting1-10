@@ -44,17 +44,17 @@ class ImageTile {
         );
 
         if (!this.isRevealed) {
-            this.context.fillStyle = 'rgba(0, 170, 190, 0.8)';
+            this.context.fillStyle = 'rgba(93, 185, 198, 0.8)';
             this.context.fillRect(this.position.x, this.position.y, this.width, this.height);
             // Draw border
             this.context.lineWidth = 2;
-            this.context.strokeStyle = "black";
+            this.context.strokeStyle = "#black";
             this.context.strokeRect(this.position.x, this.position.y, this.width, this.height)
         }
 
         if (this.drawFinalBorder) {
             this.context.lineWidth = 4;
-            this.context.strokeStyle = "black";
+            this.context.strokeStyle = "#e0d791";
             this.context.strokeRect(15, 15, 930, 530)
         }
 
@@ -210,14 +210,14 @@ class PuzzleLocation {
 
         this.context.lineWidth = this.state === 'current' ? 6 : 2; // Thicker border for current state
         this.context.stroke();
-        // Draw Text Decoration
-        this.context.fillStyle = '#e0d791';
-        this.context.font = `bold 30px Tahoma`;
-        this.context.textAlign = 'center';
-        this.context.textBaseline = 'top';
-        this.context.fillText(this.text, this.x + this.width / 2 + 3, this.y + this.height + 5);
+        // // Draw Text Decoration
+        // this.context.fillStyle = '#e0d791';
+        // this.context.font = `bold 30px Tahoma`;
+        // this.context.textAlign = 'center';
+        // this.context.textBaseline = 'top';
+        // this.context.fillText(this.text, this.x + this.width / 2 + 3, this.y + this.height + 5);
         // Draw text for completed levels
-        this.context.fillStyle = '#c98d5b';
+        this.context.fillStyle = '#e0d791';
         this.context.font = `bold 30px Tahoma`;
         this.context.textAlign = 'center';
         this.context.textBaseline = 'top';

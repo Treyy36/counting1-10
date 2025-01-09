@@ -44,6 +44,8 @@ for (let i = 0; i < 10; i++) {
 }
 const backgroundImage = new Image();
 backgroundImage.src = 'img/sea-background.png';
+const puzzleBackgroundImage = new Image();
+puzzleBackgroundImage.src = 'img/sea-background-plain.png';
 const kelpForestImage = new Image();
 kelpForestImage.src = 'img/1-kelp-forest.png';
 const shipwreckImage = new Image();
@@ -185,14 +187,14 @@ function startPuzzle(level) {
 }
 
 function startingAudio() {
-    // currentLevel = 1;
-    AUDIO.welcome.play();
-    AUDIO.welcome.addEventListener('ended', () => {
-        setTimeout(() => {
-            currentLevel=1;
-            AUDIO.kelpForest.play();
-        }, 2000); 
-    });
+    currentLevel = 1;
+    // AUDIO.welcome.play();
+    // AUDIO.welcome.addEventListener('ended', () => {
+    //     setTimeout(() => {
+    //         currentLevel=1;
+    //         AUDIO.kelpForest.play();
+    //     }, 2000); 
+    // });
 }
 
 function setupPuzzleTileEventListeners() {
@@ -234,7 +236,7 @@ function animatePuzzle() {
     // console.log("Animating Puzzle");
     const puzzleAnimation = requestAnimationFrame(() => animatePuzzle());
     if (!selectingLevel){
-        ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+        ctx.drawImage(puzzleBackgroundImage, 0, 0, canvas.width, canvas.height);
         imageTiles.forEach(tile => tile.update());
         buttons.forEach(button => button.draw());
     } else {
