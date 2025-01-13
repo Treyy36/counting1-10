@@ -108,7 +108,7 @@ class ImageTile {
     }
 
     checkOrder(value) {
-        console.log(`Tile value: ${this.value} and the current order is: ${this.order[orderCnt]}`)
+        // console.log(`Tile value: ${this.value} and the current order is: ${this.order[orderCnt]}`)
         if (value === this.order[orderCnt]) {
             AUDIO.correct.currentTime = 0;
             AUDIO.correct.play();
@@ -259,6 +259,15 @@ class Button {
     draw() {
         // Rounded corners setup
         const radius = 10; // Adjust for desired roundness
+        // Create gradient for button when disabled
+        if (!this.enabled) {
+            const gradient = this.context.createLinearGradient(this.x, this.y, this.x, this.y + this.height);
+            gradient.addColorStop(0, '#f0f0f0'); // A slightly darker shade of white
+            gradient.addColorStop(1, '#d3d3d3'); // A slightly darker shade of light grey
+            this.context.fillStyle = gradient;
+        } else {
+            this.context.fillStyle = customOrange;
+        }
         this.context.beginPath();
         this.context.moveTo(this.x + radius, this.y);
         this.context.lineTo(this.x + this.width - radius, this.y);
@@ -270,10 +279,9 @@ class Button {
         this.context.lineTo(this.x, this.y + radius);
         this.context.quadraticCurveTo(this.x, this.y, this.x + radius, this.y);
         this.context.closePath();
-        this.context.fillStyle = customOrange;
         this.context.fill();
-    
-    
+
+        
         // Draw border
         this.context.lineWidth = 2;
         this.context.strokeStyle = "black";
@@ -286,7 +294,6 @@ class Button {
         this.context.textBaseline = 'middle';
         this.context.fillText(this.text, this.x + this.width / 2, this.y + this.height / 2);
     }
-
     containsPoint(mouseX, mouseY) {
         return (
             mouseX >= this.x &&

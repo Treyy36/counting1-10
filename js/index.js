@@ -6,16 +6,19 @@ const AUDIO = {
     win: new Audio('./audio/yay-you-win.mp3'),
     levelComplete: new Audio('./audio/level-up.mp3'),
 
-    welcome: new Audio('./audio/welcome.mp3'),
-    kelpForest: new Audio('./audio/kelp-forest.mp3'),
-    shipwreck: new Audio('./audio/shipwreck.mp3'),
-    jellyfish: new Audio('./audio/jellyfish.mp3'),
-    coral: new Audio('./audio/coral-reef.mp3'),
-    lastSpot: new Audio('./audio/last-spot.mp3'),
-    hooray: new Audio('./audio/hooray.mp3'),
-
-    puzzleInstructions: new Audio('./audio/first-puzzle-instructions.mp3'),
-    noDolphinHere: new Audio('./audio/no-dolphin-here.mp3')
+    audio_0_welcome: new Audio('./audio/finthedolphin-0-welcome.mp3'),
+    audio_1_kelp_forest: new Audio('./audio/finthedolphin-1-kelp-forest.mp3'),
+    audio_2_click_numbers: new Audio('./audio/finthedolphin-2-click-numbers.mp3'),
+    audio_3_no_dolphin_here: new Audio('./audio/finthedolphin-3-no-dolphin-here.mp3'),
+    audio_4_shipwreck: new Audio('./audio/finthedolphin-4-shipwreck.mp3'),
+    audio_6_keep_searching: new Audio('./audio/finthedolphin-6-keep-searching.mp3'),
+    audio_7_jellyfish: new Audio('./audio/finthedolphin-7-jellyfish.mp3'),
+    audio_9_still_no_dolphin: new Audio('./audio/finthedolphin-9-still-no-dolphin.mp3'),
+    audio_10_coral_reef: new Audio('./audio/finthedolphin-10-coral-reef.mp3'),
+    audio_12_keep_searching: new Audio('./audio/finthedolphin-12-keep-searching.mp3'),
+    audio_13_check_last_spot: new Audio('./audio/finthedolphin-13-check-last-spot.mp3'),
+    audio_15_hooray: new Audio('./audio/finthedolphin-15-hooray.mp3'),
+    audio_16_explore_again: new Audio('./audio/finthedolphin-16-explore-again.mp3'),
 };
 
 const canvas = document.querySelector('canvas');
@@ -119,7 +122,23 @@ function setupButtons() {
             onClick: () => {
                 removeCurrentPuzzle();
                 selectingLevel = true;
-                currentLevel++;
+                switch (currentLevel+1) {
+                    case 2:
+                        AUDIO.audio_4_shipwreck.play();
+                        break;
+                    case 3:
+                        AUDIO.audio_7_jellyfish.play();
+                        break;
+                    case 4:
+                        AUDIO.audio_10_coral_reef.play();
+                        break;
+                    case 5:
+                        AUDIO.audio_13_check_last_spot.play();
+                        break;
+                }
+                setTimeout(() => {
+                    currentLevel++;
+                }, 4000);
             }
         },
         {   x: canvas.width/2 - 75, y: canvas.height - 65, width: 150, height: 50, text: 'Restart', enabled: true, context: ctx, 
@@ -158,11 +177,31 @@ function setupButtons() {
 function winSequence() {
     //play voice audio
     setTimeout(() => {
-        AUDIO.noDolphinHere.currentTime = 0;
-        AUDIO.noDolphinHere.play();
-        // enable continue button
-        buttons.at(1).enabled = true;
+        switch (currentLevel) {
+            case 1: 
+                AUDIO.audio_3_no_dolphin_here.play();
+                break;
+            case 2:
+                AUDIO.audio_6_keep_searching.play();
+                break;
+            case 3:
+                AUDIO.audio_9_still_no_dolphin.play();
+                break;
+            case 4:
+                AUDIO.audio_12_keep_searching.play();
+                break;
+            case 5:
+                AUDIO.audio_15_hooray.play();
+                AUDIO.audio_15_hooray.addEventListener('ended', () => {
+                    AUDIO.audio_16_explore_again.play()
+                });
+                break;
+        }
     }, 2500);
+    // enable continue button
+    setTimeout(() => {
+        buttons.at(1).enabled = true;
+    }, 6000)
 
     // Trigger Win Animation
     let delay = 0;
@@ -193,17 +232,19 @@ function startPuzzle(level) {
     initializeImageTiles(randomPositions, currentPuzzle.image);
     selectingLevel = false;
     currentLevel = level;
+    AUDIO.audio_2_click_numbers.currentTime = 0;
+    AUDIO.audio_2_click_numbers.play();
 }
 
 function startingAudio() {
-    currentLevel = 1;
-    // AUDIO.welcome.play();
-    // AUDIO.welcome.addEventListener('ended', () => {
-    //     setTimeout(() => {
-    //         currentLevel=1;
-    //         AUDIO.kelpForest.play();
-    //     }, 2000); 
-    // });
+    // currentLevel = 4;
+    AUDIO.audio_0_welcome.play();
+    AUDIO.audio_0_welcome.addEventListener('ended', () => {
+        AUDIO.audio_1_kelp_forest.play();
+        AUDIO.audio_1_kelp_forest.addEventListener('ended', () => {
+            currentLevel = 1;
+        });
+    });
 }
 
 function setupPuzzleTileEventListeners() {
