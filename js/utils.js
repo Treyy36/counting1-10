@@ -5,6 +5,19 @@
 // const maxElementHeight = availableHeight / Math.ceil(Math.sqrt(numElements));
 // const availableWidth = areaWidth - 2 * margin;
 // const availableHeight = areaHeight - 2 * margin;
+
+const customFont = new FontFace('CustomFont', 'url(/fonts/mapsend-font.ttf)');
+const customOrange = '#e68a3f'
+const customYellow = '#f2e28c'
+
+// Add the font to the document and make it available for use
+customFont.load().then((loadedFont) => {
+    document.fonts.add(loadedFont);
+    console.log('Custom font loaded successfully.');
+}).catch((error) => {
+    console.error('Failed to load custom font:', error);
+});
+
 const correctMaxElementHeight = 320; 
 const correctMaxElementWidth = 192;
 
@@ -58,7 +71,7 @@ function areRectanglesOverlapping(x1, y1, x2, y2, width, height) {
     const totalGridHeight = numRows * elementHeight;
 
     const startX = (areaWidth - totalGridWidth) / 2; // Center horizontally
-    const startY = (15); //15px margin from top
+    const startY = (40); //15px margin from top
 
     const positions = [];
     for (let row = 0; row < numRows; row++) {

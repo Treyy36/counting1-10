@@ -54,8 +54,8 @@ class ImageTile {
 
         if (this.drawFinalBorder) {
             this.context.lineWidth = 4;
-            this.context.strokeStyle = "#e0d791";
-            this.context.strokeRect(15, 15, 930, 530)
+            this.context.strokeStyle = customYellow;
+            this.context.strokeRect(15, 42.5, 930, 530)
         }
 
         // Draw Text
@@ -210,22 +210,18 @@ class PuzzleLocation {
 
         this.context.lineWidth = this.state === 'current' ? 6 : 2; // Thicker border for current state
         this.context.stroke();
-        // // Draw Text Decoration
-        // this.context.fillStyle = '#e0d791';
-        // this.context.font = `bold 30px Tahoma`;
-        // this.context.textAlign = 'center';
-        // this.context.textBaseline = 'top';
-        // this.context.fillText(this.text, this.x + this.width / 2 + 3, this.y + this.height + 5);
+        // Draw Text Decoration
+        this.context.fillStyle = customYellow;
+        this.context.font = `bold 35px CustomFont`;
+        this.context.textAlign = 'center';
+        this.context.textBaseline = 'top';
+        this.context.fillText(this.text, this.x + this.width / 2 + 3, this.y + this.height + 5);
         // Draw text for completed levels
-        this.context.fillStyle = '#e0d791';
-        this.context.font = `bold 30px Tahoma`;
+        this.context.fillStyle = customOrange;
+        this.context.font = `bold 35px CustomFont`;
         this.context.textAlign = 'center';
         this.context.textBaseline = 'top';
         this.context.fillText(this.text, this.x + this.width / 2, this.y + this.height + 5);
-        // // Draw Text border
-        // this.context.lineWidth = .1;
-        // this.context.strokeStyle = "e0d791";
-        // this.context.strokeText(this.text, this.x + this.width / 2, this.y + this.height + 5)
     }
 
     containsPoint(mouseX, mouseY) {
@@ -263,23 +259,6 @@ class Button {
     draw() {
         // Rounded corners setup
         const radius = 10; // Adjust for desired roundness
-    
-        // Shadow properties
-        this.context.shadowColor = 'rgba(0, 0, 0, 0.5)';
-        this.context.shadowOffsetX = 3;
-        this.context.shadowOffsetY = 3;
-        this.context.shadowBlur = 5;
-    
-        // Create gradient
-        const gradient = this.context.createLinearGradient(this.x, this.y, this.x, this.y + this.height);
-        if (!this.enabled) {
-            gradient.addColorStop(0, 'white');
-            gradient.addColorStop(1, 'lightgrey');
-        } else {
-            gradient.addColorStop(0, 'orange');
-            gradient.addColorStop(1, 'darkorange');
-        }
-        // Draw rounded rectangle with gradient
         this.context.beginPath();
         this.context.moveTo(this.x + radius, this.y);
         this.context.lineTo(this.x + this.width - radius, this.y);
@@ -291,13 +270,9 @@ class Button {
         this.context.lineTo(this.x, this.y + radius);
         this.context.quadraticCurveTo(this.x, this.y, this.x + radius, this.y);
         this.context.closePath();
-    
-        // Fill with gradient
-        this.context.fillStyle = gradient;
+        this.context.fillStyle = customOrange;
         this.context.fill();
     
-        // Reset shadow for border
-        this.context.shadowColor = 'transparent';
     
         // Draw border
         this.context.lineWidth = 2;
@@ -306,7 +281,7 @@ class Button {
     
         // Draw button text
         this.context.fillStyle = 'white';
-        this.context.font = `${this.height * 0.7}px Tahoma`;
+        this.context.font = `Bold ${this.height * 0.7}px CustomFont`;
         this.context.textAlign = 'center';
         this.context.textBaseline = 'middle';
         this.context.fillText(this.text, this.x + this.width / 2, this.y + this.height / 2);
@@ -325,5 +300,30 @@ class Button {
         if (this.enabled && this.containsPoint(mouseX, mouseY) && this.onClick) {
             this.onClick();
         }
+    }
+}
+class Title {
+    constructor({ x, y, width, height, text, enabled, onClick, context}) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.text = text;
+        this.context = context // canvas context needs to be passed into this class to draw
+    }
+
+    draw() {
+        // Draw Text Decoration
+        this.context.fillStyle = customYellow;
+        this.context.font = `Bold 35px CustomFont`;
+        this.context.textAlign = 'center';
+        this.context.textBaseline = 'top';
+        this.context.fillText(this.text, this.x + this.width / 2 + 3, this.y + this.height + 5);
+        // Draw text for completed levels
+        this.context.fillStyle = customOrange;
+        this.context.font = `Bold 35px CustomFont`;
+        this.context.textAlign = 'center';
+        this.context.textBaseline = 'top';
+        this.context.fillText(this.text, this.x + this.width / 2, this.y + this.height + 5);
     }
 }
