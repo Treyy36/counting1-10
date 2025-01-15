@@ -210,18 +210,22 @@ class PuzzleLocation {
 
         this.context.lineWidth = this.state === 'current' ? 6 : 2; // Thicker border for current state
         this.context.stroke();
-        // Draw Text Decoration
-        this.context.fillStyle = customYellow;
-        this.context.font = `bold 35px CustomFont`;
-        this.context.textAlign = 'center';
-        this.context.textBaseline = 'top';
-        this.context.fillText(this.text, this.x + this.width / 2 + 3, this.y + this.height + 5);
+        // // Draw Text Decoration
+        // this.context.fillStyle = customYellow;
+        // this.context.font = `35px ${defaultFont}`;
+        // this.context.textAlign = 'center';
+        // this.context.textBaseline = 'top';
+        // this.context.fillText(this.text, this.x + this.width / 2 + 3, this.y + this.height + 5);
         // Draw text for completed levels
         this.context.fillStyle = customOrange;
-        this.context.font = `bold 35px CustomFont`;
+        this.context.font = `35px ${defaultFont}`;
         this.context.textAlign = 'center';
         this.context.textBaseline = 'top';
         this.context.fillText(this.text, this.x + this.width / 2, this.y + this.height + 5);
+        // Draw text outline
+        this.context.lineWidth = 0.5; // Outline thickness
+        this.context.strokeStyle = customYellow; // Outline color
+        this.context.strokeText(this.text, this.x + this.width / 2, this.y + this.height + 5);
     }
 
     containsPoint(mouseX, mouseY) {
@@ -245,12 +249,13 @@ class PuzzleLocation {
     }
 }
 class Button {
-    constructor({ x, y, width, height, text, enabled, onClick, context}) {
+    constructor({ x, y, width, height, text, secondaryText, enabled, onClick, context}) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.text = text;
+        this.secondaryText = secondaryText;
         this.enabled = enabled;
         this.onClick = onClick;
         this.context = context // canvas context needs to be passed into this class to draw
@@ -280,19 +285,22 @@ class Button {
         this.context.quadraticCurveTo(this.x, this.y, this.x + radius, this.y);
         this.context.closePath();
         this.context.fill();
-
-        
         // Draw border
         this.context.lineWidth = 2;
         this.context.strokeStyle = "black";
         this.context.stroke();
-    
         // Draw button text
         this.context.fillStyle = 'white';
-        this.context.font = `Bold ${this.height * 0.7}px CustomFont`;
+        this.context.font = `bold 50px ${defaultFont}`;
         this.context.textAlign = 'center';
         this.context.textBaseline = 'middle';
         this.context.fillText(this.text, this.x + this.width / 2, this.y + this.height / 2);
+        // Draw button secondary text
+        this.context.fillStyle = 'white';
+        this.context.font = `bold 17px ${defaultFont}`;
+        this.context.textAlign = 'center';
+        this.context.textBaseline = 'middle';
+        this.context.fillText(this.secondaryText, this.x + this.width / 2, this.y + this.height / 2 + 42);
     }
     containsPoint(mouseX, mouseY) {
         return (
@@ -316,21 +324,22 @@ class Title {
         this.width = width;
         this.height = height;
         this.text = text;
+        this.enabled = true;
         this.context = context // canvas context needs to be passed into this class to draw
     }
 
     draw() {
-        // Draw Text Decoration
-        this.context.fillStyle = customYellow;
-        this.context.font = `Bold 35px CustomFont`;
-        this.context.textAlign = 'center';
-        this.context.textBaseline = 'top';
-        this.context.fillText(this.text, this.x + this.width / 2 + 3, this.y + this.height + 5);
-        // Draw text for completed levels
-        this.context.fillStyle = customOrange;
-        this.context.font = `Bold 35px CustomFont`;
-        this.context.textAlign = 'center';
-        this.context.textBaseline = 'top';
-        this.context.fillText(this.text, this.x + this.width / 2, this.y + this.height + 5);
+        console.log(this.enabled)
+        if (this.enabled) {
+            this.context.fillStyle = customOrange;
+            this.context.font = `Bold 45px ${defaultFont}`;
+            this.context.textAlign = 'center';
+            this.context.textBaseline = 'top';
+            this.context.fillText(this.text, this.x + this.width / 2, this.y + this.height + 5);
+            // Draw text outline
+            this.context.lineWidth = 1; // Outline thickness
+            this.context.strokeStyle = customYellow; // Outline color
+            this.context.strokeText(this.text, this.x + this.width / 2,this.y + this.height + 5);
+        }
     }
 }

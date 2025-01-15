@@ -1,12 +1,14 @@
 // src = utils.js
 
-// // Calculate available space after margins
-// const maxElementWidth = availableWidth / Math.ceil(Math.sqrt(numElements)); // Use the square root to fit in rows and columns
-// const maxElementHeight = availableHeight / Math.ceil(Math.sqrt(numElements));
-// const availableWidth = areaWidth - 2 * margin;
-// const availableHeight = areaHeight - 2 * margin;
+function logGlobalVariables() {
+    console.log(selectingLevel)
+    console.log(currentLevel)
+    setTimeout(logGlobalVariables, 2000); 
+}
+// logGlobalVariables();
 
 const customFont = new FontFace('CustomFont', 'url(/fonts/mapsend-font.ttf)');
+const defaultFont = 'Tahoma, sans-serif';
 const customOrange = '#e68a3f'
 const customYellow = '#f2e28c'
 
@@ -107,3 +109,171 @@ function areRectanglesOverlapping(x1, y1, x2, y2, width, height) {
 
     requestAnimationFrame(animate);
 }
+
+function removeCurrentPuzzle() {
+    orderCnt = 0;
+    imageTiles.length = 0;
+    continueButton.enabled = false; // reset continue button
+}
+
+function winSequence() {
+    //play voice audio
+    setTimeout(() => {
+        switch (currentLevel) {
+            case 1: 
+                AUDIO.audio_3_no_dolphin_here.play();
+                break;
+            case 2:
+                AUDIO.audio_6_keep_searching.play();
+                break;
+            case 3:
+                AUDIO.audio_9_still_no_dolphin.play();
+                break;
+            case 4:
+                AUDIO.audio_12_keep_searching.play();
+                break;
+            case 5:
+                lastLevelCompleted = true;
+                AUDIO.audio_15_hooray.play();
+                AUDIO.audio_15_hooray.addEventListener('ended', () => {
+                    AUDIO.audio_16_explore_again.play()
+                });
+                break;
+        }
+    }, 2500);
+    // enable continue button
+    setTimeout(() => {
+       continueButton.enabled = true;
+    }, 6000)
+
+    // Trigger Win Animation
+    let delay = 0;
+    const jumpDuration = 1000;
+    const jumpHeight = 40;
+
+    imageTiles.forEach((tile, index) => {
+        setTimeout(() => {
+            animateTileJump(tile, jumpDuration, jumpHeight, () => {
+                if (index === imageTiles.length - 1) {
+                    setTimeout(() => {
+                        // Make all of the tiles numbers transparents so you can see full image
+                        imageTiles.forEach(tile => {
+                            tile.fontColor = 'rgba(0, 0, 0, 0)';
+                            tile.borderColor = 'rgba(0, 0, 0, 0)';
+                            tile.drawFinalBorder = true;
+                        });
+                        countingText.enabled = false;
+                    }, 1000);
+                }
+            });
+        }, delay);
+
+        delay += 100;
+    });
+}
+
+// Generate confetti pieces
+function createConfetti(count) {
+    for (let i = 0; i < count; i++) {
+        confettiPieces.push({
+            x: Math.random() * canvas.width, // Random horizontal position
+            y: Math.random() * canvas.height - canvas.height, // Start above the canvas
+            width: Math.random() * 10 + 5, // Random width between 5 and 15
+            height: Math.random() * 10 + 5, // Random height between 5 and 15
+            color: `hsl(${Math.random() * 360}, 100%, 50%)`, // Random color
+            rotation: Math.random() * 360, // Random initial rotation
+            rotationSpeed: Math.random() * 5 - 2.5, // Random rotation speed
+            speed: Math.random() * 2 + 1, // Random fall speed
+            sway: Math.random() * 2 - 1 // Random horizontal sway
+        });
+    }
+}
+
+// Draw a single confetti piece
+function drawConfettiPiece(piece) {
+    ctx.save();
+    ctx.translate(piece.x, piece.y);
+    ctx.rotate((piece.rotation * Math.PI) / 180);
+    ctx.fillStyle = piece.color;
+    ctx.fillRect(-piece.width / 2, -piece.height / 2, piece.width, piece.height);
+    ctx.restore();
+}
+
+// Update the position and rotation of the confetti pieces
+function updateConfetti() {
+    confettiPieces.forEach(piece => {
+        piece.y += piece.speed; // Move down
+        piece.x += piece.sway; // Horizontal sway
+        piece.rotation += piece.rotationSpeed; // Rotate
+
+        // Reset confetti piece if it falls off the canvas
+        if (piece.y > canvas.height) {
+            piece.y = 0 - piece.height;
+            piece.x = Math.random() * canvas.width;
+        }
+    });
+}
+// function setupButtons() {
+//     const buttonsConfig = [
+//         {   x: 50, y: canvas.height - 65, width: 150, height: 50, text: 'Exit', enabled: true, context: ctx, 
+//             onClick: () => {
+//                 removeCurrentPuzzle();
+//                 selectingLevel = true;
+//             }
+//         },
+//         {   x: canvas.width - 200, y: canvas.height - 65, width: 150, height: 50, text: 'Continue', enabled: false, context: ctx, 
+//             onClick: () => {
+//                 removeCurrentPuzzle();
+//                 selectingLevel = true;
+//                 switch (currentLevel+1) {
+//                     case 2:
+//                         AUDIO.audio_4_shipwreck.play();
+//                         break;
+//                     case 3:
+//                         AUDIO.audio_7_jellyfish.play();
+//                         break;
+//                     case 4:
+//                         AUDIO.audio_10_coral_reef.play();
+//                         break;
+//                     case 5:
+//                         AUDIO.audio_13_check_last_spot.play();
+//                         break;
+//                 }
+//                 setTimeout(() => {
+//                     currentLevel++;
+//                 }, 4000);
+//             }
+//         },
+//         {   x: canvas.width/2 - 75, y: canvas.height - 65, width: 150, height: 50, text: 'Restart', enabled: true, context: ctx, 
+//             onClick: () => {
+//                 removeCurrentPuzzle();
+//                 initializeImageTiles(randomPositions, currentPuzzle.image);
+//             }
+//         },
+//     ];
+
+//     const buttons = buttonsConfig.map(config => {
+//         const button = new Button({
+//             x: config.x,
+//             y: config.y,
+//             width: config.width,
+//             height: config.height,
+//             text: config.text,
+//             enabled: config.enabled,
+//             context: config.context,
+//             onClick: config.onClick,
+//             context: ctx,
+//         });
+//         // Event listener to handle click for this button
+//         canvas.addEventListener('click', (event) => {
+//             const rect = canvas.getBoundingClientRect();
+//             const mouseX = event.clientX - rect.left;
+//             const mouseY = event.clientY - rect.top;
+
+//         button.handleClick(mouseX, mouseY);
+//         });
+//         return button;
+//     });
+
+//     return buttons;
+// }
