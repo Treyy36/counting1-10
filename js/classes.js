@@ -1,6 +1,6 @@
 // src classes.js
 class ImageTile {
-    constructor({ position, velocity, value, context, rows, cols, image, imageWidth, imageHeight }) {
+    constructor({ position, velocity, value, context, rows, cols, image, imageWidth, imageHeight}) {
         this.position = position;
         this.velocity = velocity;
         this.value = value;

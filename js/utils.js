@@ -173,7 +173,7 @@ function winSequence() {
 }
 
 // Generate confetti pieces
-function createConfetti(count) {
+function createConfetti(count, canvas) {
     for (let i = 0; i < count; i++) {
         confettiPieces.push({
             x: Math.random() * canvas.width, // Random horizontal position
@@ -190,7 +190,7 @@ function createConfetti(count) {
 }
 
 // Draw a single confetti piece
-function drawConfettiPiece(piece) {
+function drawConfettiPiece(piece, ctx) {
     ctx.save();
     ctx.translate(piece.x, piece.y);
     ctx.rotate((piece.rotation * Math.PI) / 180);
@@ -200,7 +200,7 @@ function drawConfettiPiece(piece) {
 }
 
 // Update the position and rotation of the confetti pieces
-function updateConfetti() {
+function updateConfetti(canvas) {
     confettiPieces.forEach(piece => {
         piece.y += piece.speed; // Move down
         piece.x += piece.sway; // Horizontal sway
