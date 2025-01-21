@@ -1,45 +1,27 @@
 //src index.js
 
-function startTheGame() {
-    // Initialize DOM elements
-    const canvas = document.querySelector('canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = 960;
-    canvas.height = 640;
-
-    // Game setup
-    initializeConstants(canvas, ctx);
-    createConfetti(150, canvas); 
-    setupPuzzleTileEventListeners(canvas);
-    animateMap(canvas, ctx);
-
-
-    // Play starting audio
-    startingAudio();
-}
-
-function initializeConstants(canvas, ctx) {
+function initializeConstants(canvas, ctx, basePath) {
     //Audio
     window.AUDIO = {
-        correct: new Audio('./audio/answer-is-correct.mp3'),
-        incorrect: new Audio('./audio/answer-is-wrong.mp3'),
-        win: new Audio('./audio/yay-you-win.mp3'),
-        levelComplete: new Audio('./audio/level-up.mp3'),
-        audio_0_welcome: new Audio('./audio/finthedolphin-0-welcome.mp3'),
-        audio_1_kelp_forest: new Audio('./audio/finthedolphin-1-kelp-forest.mp3'),
-        audio_2_click_numbers: new Audio('./audio/finthedolphin-2-click-numbers.mp3'),
-        audio_3_no_dolphin_here: new Audio('./audio/finthedolphin-3-no-dolphin-here.mp3'),
-        audio_4_shipwreck: new Audio('./audio/finthedolphin-4-shipwreck.mp3'),
-        audio_6_keep_searching: new Audio('./audio/finthedolphin-6-keep-searching.mp3'),
-        audio_7_jellyfish: new Audio('./audio/finthedolphin-7-jellyfish.mp3'),
-        audio_9_still_no_dolphin: new Audio('./audio/finthedolphin-9-still-no-dolphin.mp3'),
-        audio_10_coral_reef: new Audio('./audio/finthedolphin-10-coral-reef.mp3'),
-        audio_12_keep_searching: new Audio('./audio/finthedolphin-12-keep-searching.mp3'),
-        audio_13_check_last_spot: new Audio('./audio/finthedolphin-13-check-last-spot.mp3'),
-        audio_15_hooray: new Audio('./audio/finthedolphin-15-hooray.mp3'),
-        audio_16_explore_again: new Audio('./audio/finthedolphin-16-explore-again.mp3'),
+        correct: new Audio(`${basePath}/audio/answer-is-correct.mp3`),
+        incorrect: new Audio(`${basePath}/audio/answer-is-wrong.mp3`),
+        win: new Audio(`${basePath}/audio/yay-you-win.mp3`),
+        levelComplete: new Audio(`${basePath}/audio/level-up.mp3`),
+        audio_0_welcome: new Audio(`${basePath}/audio/finthedolphin-0-welcome.mp3`),
+        audio_1_kelp_forest: new Audio(`${basePath}/audio/finthedolphin-1-kelp-forest.mp3`),
+        audio_2_click_numbers: new Audio(`${basePath}/audio/finthedolphin-2-click-numbers.mp3`),
+        audio_3_no_dolphin_here: new Audio(`${basePath}/audio/finthedolphin-3-no-dolphin-here.mp3`),
+        audio_4_shipwreck: new Audio(`${basePath}/audio/finthedolphin-4-shipwreck.mp3`),
+        audio_6_keep_searching: new Audio(`${basePath}/audio/finthedolphin-6-keep-searching.mp3`),
+        audio_7_jellyfish: new Audio(`${basePath}/audio/finthedolphin-7-jellyfish.mp3`),
+        audio_9_still_no_dolphin: new Audio(`${basePath}/audio/finthedolphin-9-still-no-dolphin.mp3`),
+        audio_10_coral_reef: new Audio(`${basePath}/audio/finthedolphin-10-coral-reef.mp3`),
+        audio_12_keep_searching: new Audio(`${basePath}/audio/finthedolphin-12-keep-searching.mp3`),
+        audio_13_check_last_spot: new Audio(`${basePath}/audio/finthedolphin-13-check-last-spot.mp3`),
+        audio_15_hooray: new Audio(`${basePath}/audio/finthedolphin-15-hooray.mp3`),
+        audio_16_explore_again: new Audio(`${basePath}/audio/finthedolphin-16-explore-again.mp3`),
     };
-    window.puzzleLocations = setupPuzzleLocations(canvas, ctx);
+    window.puzzleLocations = setupPuzzleLocations(canvas, ctx, basePath);
     window.imageTiles = [];
     window.rows = 2;
     window.cols = 5;
@@ -74,7 +56,6 @@ function initializeConstants(canvas, ctx) {
         enabled: false,
         context: ctx,
         onClick: () => {
-            console.log(currentLevel);
             if (currentLevel == 5) {
                 window.location.reload();
             } else {
@@ -85,21 +66,25 @@ function initializeConstants(canvas, ctx) {
                 switch (currentLevel + 1) {
                     case 2:
                         AUDIO.audio_4_shipwreck.play();
+                        currentLevel++;
                         break;
                     case 3:
                         AUDIO.audio_7_jellyfish.play();
+                        currentLevel++;
                         break;
                     case 4:
                         AUDIO.audio_10_coral_reef.play();
+                        currentLevel++;
                         break;
                     case 5:
                         AUDIO.audio_13_check_last_spot.play();
+                        currentLevel++;
                         break;
                 }
     
-                setTimeout(() => {
-                    currentLevel++;
-                }, 4000);
+                // setTimeout(() => {
+                //     currentLevel++;
+                // }, 4000);
             }
             
         }
@@ -130,7 +115,6 @@ function initializeConstants(canvas, ctx) {
             window.location.reload();
         }
     });
-    // Add other initialization logic here
 }
 
 function initializeImageTiles(positions, image, ctx) {
@@ -147,10 +131,10 @@ function initializeImageTiles(positions, image, ctx) {
             cols: cols,
             image: image,
             imageWidth: puzzleImageWidth,
-            imageHeight: puzzleImageHeight
+            imageHeight: puzzleImageHeight,
+            enabled: false
         }));
     }
-    // setupPuzzleTileEventListeners();
 }
 
 // Wrap event listener setups in functions
@@ -165,7 +149,7 @@ function setupPuzzleTileEventListeners(canvas) {
         exitButton.handleClick(mouseX, mouseY);
         imageTiles.forEach((tile) => {
             if (
-                !tile.isRevealed &&
+                !tile.isRevealed && tile.enabled &&
                 containsPoint(
                     mouseX,
                     mouseY,
@@ -186,21 +170,29 @@ function startPuzzle(level, ctx) {
     initializeImageTiles(randomPositions, currentPuzzle.image, ctx);
     selectingLevel = false;
     currentLevel = level;
-    AUDIO.audio_2_click_numbers.currentTime = 0;
-    AUDIO.audio_2_click_numbers.play();
+    if (level == 1) {
+        AUDIO.audio_2_click_numbers.currentTime = 0;
+        AUDIO.audio_2_click_numbers.play();
+    }
+    setTimeout(() => {
+        imageTiles.forEach(tile => {
+            tile.enabled = true;
+        });
+    }, 500);
+
 }
 
-function setupPuzzleLocations(canvas, ctx) {
+function setupPuzzleLocations(canvas, ctx, basePath) {
     const kelpForestImage = new Image();
-    kelpForestImage.src = 'img/1-kelp-forest.png';
+    kelpForestImage.src = `${basePath}/img/1-kelp-forest.png`;
     const shipwreckImage = new Image();
-    shipwreckImage.src = 'img/2-shipwreck.png';
+    shipwreckImage.src = `${basePath}/img/2-shipwreck.png`;
     const jellyfishImage = new Image();
-    jellyfishImage.src = 'img/3-jellyfish.png';
+    jellyfishImage.src = `${basePath}/img/3-jellyfish.png`;
     const coralReefImage = new Image();
-    coralReefImage.src = 'img/4-coral-reef.png';
+    coralReefImage.src = `${basePath}/img/4-coral-reef.png`;
     const dolphinLagoonImage = new Image();
-    dolphinLagoonImage.src = 'img/5-dolphin-lagoon.png';
+    dolphinLagoonImage.src = `${basePath}/img/5-dolphin-lagoon.png`;
 
     const locationsConfig = [
         { x: canvas.width - 605, y: canvas.height - 505, text: 'Kelp Forest', level: 1, image: kelpForestImage },
@@ -236,12 +228,12 @@ function setupPuzzleLocations(canvas, ctx) {
 }
 
 
-function animatePuzzle(canvas, ctx) {
+function animatePuzzle(canvas, ctx, basePath) {
     // console.log("Animating Puzzle");
     const puzzleBackgroundImage = new Image();
-    puzzleBackgroundImage.src = 'img/sea-background-plain.png';
+    puzzleBackgroundImage.src = `${basePath}/img/sea-background-plain.png`;
 
-    const puzzleAnimation = requestAnimationFrame(() => animatePuzzle(canvas, ctx));
+    const puzzleAnimation = requestAnimationFrame(() => animatePuzzle(canvas, ctx, basePath));
     if (!selectingLevel){
         ctx.drawImage(puzzleBackgroundImage, 0, 0, canvas.width, canvas.height);
         imageTiles.forEach(tile => tile.update());
@@ -257,16 +249,16 @@ function animatePuzzle(canvas, ctx) {
         }
     } else {
         cancelAnimationFrame(puzzleAnimation);
-        animateMap(canvas, ctx);
+        animateMap(canvas, ctx, basePath);
     }
 }
 
-function animateMap(canvas, ctx) {
+function animateMap(canvas, ctx, basePath) {
     // console.log("Animating");
     const backgroundImage = new Image();
-    backgroundImage.src = 'img/sea-background.png';
+    backgroundImage.src = `${basePath}/img/sea-background.png`;
 
-    const levelSelectAnimation = requestAnimationFrame(() => animateMap(canvas, ctx));
+    const levelSelectAnimation = requestAnimationFrame(() => animateMap(canvas, ctx, basePath));
     if (selectingLevel) {
         ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
         puzzleLocations.forEach(location => location.draw());
@@ -277,14 +269,14 @@ function animateMap(canvas, ctx) {
     }
     else {
         cancelAnimationFrame(levelSelectAnimation);
-        animatePuzzle(canvas, ctx);
+        animatePuzzle(canvas, ctx, basePath);
     }
     
 }
 
 function startingAudio() {
     // use this first line to bypass the starting audio and skip to any level for testing purposes 
-    // currentLevel = 5; 
+    // currentLevel = 1; 
     AUDIO.audio_0_welcome.play();
     AUDIO.audio_0_welcome.addEventListener('ended', () => {
         AUDIO.audio_1_kelp_forest.play();
@@ -292,6 +284,29 @@ function startingAudio() {
             currentLevel = 1;
         });
     });
+}
+
+function startTheGame() {
+
+    // Pathing for dev and production
+    const isLocal = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost";
+    const basePath = isLocal ? '' : '/game/counting-1-10';  // Empty string for local, prefix for hosted
+
+    // Initialize DOM elements
+    const canvas = document.querySelector('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 960;
+    canvas.height = 640;
+
+    // Game setup
+    initializeConstants(canvas, ctx, basePath);
+    createConfetti(150, canvas); 
+    setupPuzzleTileEventListeners(canvas);
+    animateMap(canvas, ctx, basePath);
+
+
+    // Play starting audio
+    startingAudio();
 }
 
 // Ensure this runs after DOM is ready

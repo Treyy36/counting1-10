@@ -1,6 +1,6 @@
 // src classes.js
 class ImageTile {
-    constructor({ position, velocity, value, context, rows, cols, image, imageWidth, imageHeight}) {
+    constructor({ position, velocity, value, context, rows, cols, image, imageWidth, imageHeight, enabled}) {
         this.position = position;
         this.velocity = velocity;
         this.value = value;
@@ -8,6 +8,7 @@ class ImageTile {
         this.rows = rows;
         this.cols = cols;
         this.image = image;
+        this.enabled = enabled;
 
         this.numTiles = rows * cols;
         this.tileHeight = imageHeight / rows;
@@ -163,6 +164,7 @@ class PuzzleLocation {
             this.enabled = true;
         } else if (currentLevel+1 > this.level) {
             this.state = 'completed';
+            this.enabled = false
         } else {
             this.state = 'hidden';
         }
@@ -329,7 +331,6 @@ class Title {
     }
 
     draw() {
-        console.log(this.enabled)
         if (this.enabled) {
             this.context.fillStyle = customOrange;
             this.context.font = `Bold 45px ${defaultFont}`;
