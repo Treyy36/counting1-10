@@ -6,19 +6,9 @@ function logGlobalVariables() {
     setTimeout(logGlobalVariables, 2000); 
 }
 // logGlobalVariables();
-
-const customFont = new FontFace('CustomFont', 'url(/fonts/mapsend-font.ttf)');
 const defaultFont = 'Tahoma, sans-serif';
 const customOrange = '#e68a3f'
 const customYellow = '#f2e28c'
-
-// Add the font to the document and make it available for use
-customFont.load().then((loadedFont) => {
-    document.fonts.add(loadedFont);
-    console.log('Custom font loaded successfully.');
-}).catch((error) => {
-    console.error('Failed to load custom font:', error);
-});
 
 const correctMaxElementHeight = 320; 
 const correctMaxElementWidth = 192;

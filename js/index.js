@@ -21,6 +21,16 @@ function initializeConstants(canvas, ctx, basePath) {
         audio_15_hooray: new Audio(`${basePath}/audio/finthedolphin-15-hooray.mp3`),
         audio_16_explore_again: new Audio(`${basePath}/audio/finthedolphin-16-explore-again.mp3`),
     };
+
+    // Add the font to the document and make it available for use
+    const customFont = new FontFace('CustomFont', `url(${basePath}/fonts/mapsend-font.ttf)`);
+    customFont.load().then((loadedFont) => {
+        document.fonts.add(loadedFont);
+        console.log('Custom font loaded successfully.');
+    }).catch((error) => {
+        console.error('Failed to load custom font:', error);
+    });
+
     window.puzzleLocations = setupPuzzleLocations(canvas, ctx, basePath);
     window.imageTiles = [];
     window.rows = 2;
@@ -30,7 +40,6 @@ function initializeConstants(canvas, ctx, basePath) {
     window.tileWidth = puzzleImageWidth / cols;    
     window.tileHeight = puzzleImageHeight / rows;
     window.correctPositions = generateCorrectPositions(rows, cols, tileWidth, tileHeight, canvas.width, canvas.height);
-    window.randomPositions = generateRandomPositions(rows * cols, tileWidth/2, tileHeight/2, canvas.width, canvas.height, 35);
     window.confettiPieces = [];
     window.lastLevelCompleted = false;
     window.selectingLevel = true;
@@ -165,8 +174,21 @@ function setupPuzzleTileEventListeners(canvas) {
     });
 }
 
-function startPuzzle(level, ctx) {
+function startPuzzle(level, canvas, ctx) {
     currentPuzzle = puzzleLocations.find(location => location.level === level)
+    randomPositions = generateRandomPositions(rows * cols, tileWidth/2, tileHeight/2, canvas.width, canvas.height, 35);
+    // // Generate new random positions each time
+    // const newRandomPositions = generateRandomPositions(
+    //     rows * cols, 
+    //     tileWidth / 2, 
+    //     tileHeight / 2, 
+    //     canvas.width, 
+    //     canvas.height, 
+    //     35
+    // );
+
+    // initializeImageTiles(newRandomPositions, currentPuzzle.image, ctx);
+
     initializeImageTiles(randomPositions, currentPuzzle.image, ctx);
     selectingLevel = false;
     currentLevel = level;
@@ -209,7 +231,7 @@ function setupPuzzleLocations(canvas, ctx, basePath) {
             text: config.text,
             level: config.level,
             image: config.image,
-            onClick: () => startPuzzle(config.level, ctx), 
+            onClick: () => startPuzzle(config.level, canvas, ctx), 
             context: ctx,
         });
         // Event listener to handle click for this location
@@ -276,21 +298,21 @@ function animateMap(canvas, ctx, basePath) {
 
 function startingAudio() {
     // use this first line to bypass the starting audio and skip to any level for testing purposes 
-    // currentLevel = 1; 
-    AUDIO.audio_0_welcome.play();
-    AUDIO.audio_0_welcome.addEventListener('ended', () => {
-        AUDIO.audio_1_kelp_forest.play();
-        AUDIO.audio_1_kelp_forest.addEventListener('ended', () => {
-            currentLevel = 1;
-        });
-    });
+    currentLevel = 1; 
+    // AUDIO.audio_0_welcome.play();
+    // AUDIO.audio_0_welcome.addEventListener('ended', () => {
+    //     AUDIO.audio_1_kelp_forest.play();
+    //     AUDIO.audio_1_kelp_forest.addEventListener('ended', () => {
+    //         currentLevel = 1;
+    //     });
+    // });
 }
 
 function startTheGame() {
 
     // Pathing for dev and production
     const isLocal = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost";
-    const basePath = isLocal ? '' : '/game/counting-1-10';  // Empty string for local, prefix for hosted
+    const basePath = isLocal ? '' : '/game/counting-1-to-10';  // Empty string for local, prefix for hosted
 
     // Initialize DOM elements
     const canvas = document.querySelector('canvas');
